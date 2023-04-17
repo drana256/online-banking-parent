@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add Branch</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  <style>
+    .error{
+      color:red;
+      font-weight: bold;
+      font-size: 18px;
+  }
+  
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+
+<script>
+
+var name="India is a country!!!";
+
+function clearError(){
+	document.getElementById("nameErrorMessage").innerHTML="";
+}
+
+  //This is JavaScript function
+  function validateForm(){
+	  console.log("Hey!!!!!!!!!!!!");
+	  var pname=document.getElementById("name").value;
+	  if(pname.length==0 || pname.length < 4){
+		  //alert("Hey name length cannot be less than 4.");
+		  document.getElementById("nameErrorMessage").innerHTML="Hey name length cannot be less than 4.";
+		  document.getElementById("name").focus();
+		  return;
+	  }
+	  
+	  var pcode=document.getElementById("code").value;
+	  if(pcode.length==0 || pcode.length < 4){
+		  //alert("Hey name length cannot be less than 4.");
+		  document.getElementById("codeErrorMessage").innerHTML="Hey code cannot be empty";
+		  document.getElementById("code").focus();
+		  return;
+	  }
+	  
+	  //Now submit the form using JavaScript code
+	  document.getElementById("addBranchForm").submit();
+  }
+
+
+</script>
+
+</head>
+<body>
+<header style="height: 30px;background-color: maroon;">
+</header>
+<div class="container">
+  <h2>Add New Branch
+  </h2>
+  <img th:src="@{/images/customer-en.png}" alt="Logo" style="height: 120px"/>
+  <div style="width: 70%">
+  
+   <form id="addBranchForm" th:action="@{/admin/addBranch}" method="POST"  th:object="${branchVO}" >
+  
+    <div class="form-group">
+      <label for="name">Name: *</label>
+      <input onkeypress="clearError();"  type="text" style="width: 60%;" class="form-control" id="name"   th:field="*{name}" placeholder="Enter name">
+      <span id="nameErrorMessage" style="color:red;font-size: 16px;font-weight: bold;"></span>
+      
+    </div>
+  
+    <div class="form-group">
+      <label for="code">Code: *</label>
+      <input type="text" class="form-control"  id="code"  th:field="*{code}" placeholder="Enter code">
+         <span id="codeErrorMessage" style="color:red;font-size: 16px;font-weight: bold;"></span>
+   
+    </div>
+    <div class="form-group">
+      <label for="ifsc">Ifsc:</label>
+      <input type="text" style="width: 60%;" 
+      th:field="*{ifsc}"  class="form-control" placeholder="Enter ifsc">
+    </div>
+    
+    
+     <div class="form-group">
+      <label for="state">State:</label>
+      <select style="width: 80%;"  class="form-control" th:field="*{state}">
+         <option value="Texas">Texas</option>
+         <option value="California">California</option>
+         <option value="Florida">Florida</option>
+         <option value="Georgia">Georgia</option>
+      </select>
+    </div>
+    
+     <div class="form-group">
+      <label for="city">City:</label>
+      <select style="width: 60%;"  class="form-control" th:field="*{city}">
+         <option value="Houston">Houston</option>
+         <option value="Dallas">Dallas</option>
+         <option value="Plano">Plano</option>
+         <option value="Garland">Garland</option>
+      </select>
+    </div>
+   
+  
+    
+      <div class="form-group">
+      <label for="mobile">Address:</label>
+      <textarea style="width: 60%;" 
+      th:field="*{address}"  class="form-control"></textarea>
+    </div>
+   
+    <button type="button" class="btn btn-primary"  onclick="validateForm();">Add Branch</button>
+    <a th:href="@{/customer/login}"> 
+    <button type="button" class="btn btn-danger">Login</button>
+    </a>
+  </form>
+  </div>
+</div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>

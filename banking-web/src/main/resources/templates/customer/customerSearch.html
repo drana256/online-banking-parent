@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Pending payee Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+  
+   
+  <script type="text/javascript">
+  $(document).ready(function() {
+       // $('#enquiryList').DataTable();
+    } );
+  </script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+
+<script type="text/javascript">
+  
+function clearMsg(){
+	   $("#errorMessage").html("");
+}  
+
+function generateCard(){
+	var name= $("#tname").val();
+	var email=$("#temail").val();
+	
+	$("#photophoto2").attr("src","/customers/credit/card?name="+name+"&email="+email);
+	
+	
+}
+
+function openCreditCard(name,email,userid){
+ $("#tname").val(name);
+ $("#temail").val(email);
+ $("#sname").html(name);
+ $("#creditCardGenPopup").modal('show');
+}
+
+  
+</script>
+
+</head>
+<body>
+
+
+<header style="height: 30px;background-color: maroon;color:white;">
+ 
+</header>
+<div class="container">
+  <br/><br/>
+  <a th:href="@{/customer/addPayee}"> 
+  <button type="button" class="btn btn-primary">Add payee</button>
+  </a>
+
+<a th:href="@{/customer/registeredPayee}">
+<button type="button" class="btn btn-info">My registered payees</button>
+</a>
+ <a th:href="@{/customer/logout}"><button type="button" class="btn btn-warning">Logout</button></a>
+ <br/>
+  <div style="width: 100%">
+ <hr/>
+    <table id="enquiryList" class="table table-striped table-bordered" style="width:100%">
+  <thead>
+  <tr>
+  <td> Name </td>
+  <td> Email </td>
+  <td> Mobile </td>
+   <td>User Id</td>
+   <td>User Id</td>
+   <td>User Id</td>
+    <td>  </td>
+  </tr>
+  </thead>
+ 
+  <tbody>
+  <tr th:each="customer,iter: ${customerVOs}">
+    <td th:text="${customer.name}"/>
+    <td th:text="${customer.email}"/>
+    <td th:text="${customer.mobile}"/>
+    <td th:text="${customer.userid}"/>
+    <td th:text="${customer.userid}"/>
+    <td> 
+         <button type="button" class="btn btn-info" th:onclick="|openCreditCard('${customer.name}','${customer.email}','${customer.userid}')|">Generate</button>
+     </td>
+  
+    
+  </tr>
+  </tbody>
+  </table>
+  <br/>
+  <hr/>
+  </div>
+</div>
+<footer  class="ffooter">
+</footer>
+
+
+  <!-- The APPROVE PAYEE Modal -->
+  <div class="modal" id="creditCardGenPopup">
+    <div class="modal-dialog" style="width: 500px;">
+      <div class="modal-content" style="width: 539px;">
+        <!-- Modal Header -->
+        <input type="hidden" name="tname" id="tname"/>
+        <input type="hidden" name="temail" id="temail"/>
+        <input type="hidden" name="cid" id="cid"/>
+        <div class="modal-header">
+          <h2 class="modal-title">
+          <img src="" id="photophoto" style="height: 60px;"/>
+          Credit Card Generate</h2>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+          <span  style="color:blue; font-size: 18px;font-weight: bold;">
+          
+          </span>
+        <!-- Modal body -->
+        <div class="modal-body">
+               <span  style="color:blue; font-size: 18px;font-weight: bold;" id="sname"></span>
+           <img th:src="@{/images/credit-card-front-template.jpg}" id="photophoto2"/>
+            <img th:src="@{/images/credit-card-back-template.jpg}" id="photophoto3"/>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="generateCard();">Generate Card</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+</body>
+</html>

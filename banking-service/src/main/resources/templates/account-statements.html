@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Account statements!!!!!!!!!</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+
+    <!-- use the font -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 48px;
+        }
+    </style>
+</head>
+ <body>
+    <p th:text="${'Hello Dear ' + name}"></p>
+    
+     <p>
+        <img th:src="|cid:photo|"  style="height: 200px"/>
+    </p>
+    
+    <hr/>
+    <b>From Account  : <span th:text="${fromAccount}"></span></b>
+     <hr/>
+    <div style="width: 85%">
+     <table class="table table-bordered" style="width: 100%;">
+           <tr style="background-color: #95c929;">
+             <td>SNO</td>
+             <td>To Account</td>
+             <td>Amount</td>
+             <td>Details</td>
+              <td>DOT</td>
+              <td>Status</td>
+           </tr>
+           
+           <tr th:each="customerTransaction,iter: ${customerTransactionVOs}">
+             <td th:text="${iter.index+1}"/>
+             <td th:text="${customerTransaction.toAccout}"/>
+              <td th:text="${customerTransaction.amount}"/>
+              <td th:text="${customerTransaction.details}"/>
+             <td th:text="${customerTransaction.dot}"/>
+           <td th:text="${customerTransaction.txStatus}"/>
+               
+           </tr>
+     </table>
+     </div>
+		
+
+      <br/><br/><br/>
+   
+      Regards, <br />
+      <em th:text="${sign}"></em>
+      <p th:text="${location}"></p>
+      <p th:text="${email}"></p>
+      <img th:src="|cid:bankIcon|" />
+  </body>
+</html>

@@ -1,0 +1,3 @@
+C:\Users\javahunk\git\cubic-bank\banking-web\src\main\resources>keytool -export -alias cubic_server -keystore bank_keystore.p12 -file jocka.pem
+Enter keystore password:
+Certificate stored in file <jocka.pem>

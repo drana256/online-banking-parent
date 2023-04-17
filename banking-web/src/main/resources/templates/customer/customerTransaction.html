@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Customer Transaction Details</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<header style="height: 30px;background-color: maroon;color:white;">
+
+    Hello Mr. <span th:utext="${session.userSessionVO.username}" th:unless="${session == null}" style="font-weight: bold;"></span>
+    <span style="float: right;margin-right: 100px;font-weight: bold;" th:utext="${session.userSessionVO.roles}">
+    </span>
+</header>
+<br/><br/>
+<div class="container">
+   <a th:href="@{/customer/addPayee}"> 
+  <button type="button" class="btn btn-primary">Add payee</button>
+  </a>
+
+<a th:href="@{/customer/pendingPayee}">
+<button type="button" class="btn btn-success">Pending payee</button>
+</a>
+
+<a th:href="@{/customer/registeredPayee}">
+<button type="button" class="btn btn-info">My registered payee</button>
+</a>
+
+<a th:href="@{/customer/fundTransfer}">
+<button type="button" class="btn btn-primary">Fund Transfer</button>
+</a>
+
+<a th:href="@{/customer/accountSummary}">
+<button type="button" class="btn btn-danger">Account Summary</button>
+</a>
+
+ <a th:href="@{/customer/logout}"><button type="button" class="btn btn-warning">Logout</button></a>
+ <a th:href="@{/customer/profilePics}"><button type="button" class="btn btn-warning">Profile Pics</button></a>
+ <br/>
+  <img th:src="@{/images/bubble.png}" alt="page"/>
+   
+    <img class="zoom" th:src="@{'/customer/profile/photo?cid=' + ${session.userSessionVO.cid}}" style="height: 120px;"/>
+    
+    <img th:src="@{/images/pencil.png}" alt="page"  data-toggle="modal" data-target="#changePhoto"/>
+   
+    <hr/>
+   <h2> From Account :</h2>
+    <b>009282736363563</b>
+   <span th:utext="${fromAccount}" style="color: red;font-size: 18px;">
+   </span>
+  <div style="width: 85%">
+      
+     <table class="table table-bordered" style="width: 100%;">
+           <tr style="background-color: #95c929;">
+             <td>SNO</td>
+             <td>To Account</td>
+             <td>Amount
+              <a th:href="@{/customer/customerTransaction?sort=desc}"><button type="button" class="btn btn-warning">desc</button></a>
+                 <a th:href="@{/customer/customerTransaction?sort=asc}"><button type="button" class="btn btn-primary">asc</button></a>
+             
+             </td>
+             <td>Details</td>
+              <td>DOT</td>
+              <td>Status</td>
+           </tr>
+           
+           <tr th:each="customerTransaction,iter: ${customerTransactionVOs}">
+             <td th:text="${iter.index+1}"/>
+             <td th:text="${customerTransaction.toAccout}"/>
+              <td th:text="${customerTransaction.amount}">
+               </td>
+              <td th:text="${customerTransaction.details}"/>
+             <td th:text="${customerTransaction.dot}"/>
+           <td th:text="${customerTransaction.txStatus}"/>
+               
+           </tr>
+     </table>
+  <a th:href="@{/customer/sendAccountStmt}">
+<button type="button" class="btn btn-primary">Send Email</button>
+</a>
+<button type="button" class="btn btn-primary">Export as PDF</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chartModal">Show Chart</button>
+  </div>
+</div>
+<footer  class="ffooter">
+</footer>
+
+
+<!-- The Modal -->
+<div class="modal" id="chartModal">
+  <div class="modal-dialog" style="width: 900px;">
+    <div class="modal-content" style="width: 900px;">
+   
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Customer Transaction!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <img th:src="@{/customer/barChart}" alt="page"/>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="changePhoto">
+  <div class="modal-dialog" style="width: 900px;">
+    <div class="modal-content" style="width: 900px;">
+    
+    <!-- 
+    enctype ,  means you want to upload file  
+     -->
+  <form  th:action="@{/customer/upload/profile/pic}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="cid"  th:value="${session.userSessionVO.cid}">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Profile PC!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <input type="file" name="photo" class="form-control">
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+       <button type="submit" class="btn btn-danger">Update</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+</form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

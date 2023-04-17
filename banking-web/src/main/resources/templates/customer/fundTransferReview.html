@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Fund Transfer Review Page!</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  <style>
+  
+  .error{
+      color:red;
+      font-weight: bold;
+      font-size: 18px;
+  }
+  
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+
+
+<script  th:inline="javascript">
+  
+  
+   function loadData(){
+	   
+	   /*<![CDATA[*/
+       var username = /*[[${session.userSessionVO.username}]]*/;
+     /*]]>*/
+	   //When page is loaded then this method will be called
+	   fetch("/v3/customer/from-to-accounts?loginid="+username).then(response=>response.json()).then(function(data){
+             console.log(data);		
+             $("#fromAccount").append($("<option />").val(data.fromAccount).text(data.fromAccount));
+             var arrayData=data.toAccounts;
+             for(var x=0;x<arrayData.length;x++) {
+            	 $("#toAccount").append($("<option />").val(arrayData[x]).text(arrayData[x]));
+             }
+             
+             $("#cbalance").html(data.currentBalance);
+             
+	   });
+   }
+   
+   function sendOTP(){
+	   
+	   $("#resetOtp").prop('disabled', true);
+	   /*<![CDATA[*/
+       var username = /*[[${session.userSessionVO.username}]]*/;
+     /*]]>*/
+	   fetch("/v3/transaction/otp?username="+username)
+	          .then(response=>response.text()).then(function(data){
+	        	//showing opt section
+	        	 $("#otpSection").show(); 
+	        	
+	        	 var timeleft = 15;
+	             var codeTimer = setInterval(function() {
+	                 timeleft--;
+	                 $("#otpTimer").html(timeleft + " second(s) left")
+	                 if (timeleft <= 0) {
+	                     clearInterval(codeTimer);
+	                     $("#otpTimer").html("");
+	                     $("#resetOtp").prop('disabled', false);
+	                 }
+	             }, 1000);
+	        	
+	        	  
+	   }); //end of the fetch
+   }
+
+   //This code will execute when page is loaded!!!
+  $(document).ready(function(){
+	  //hiding opt section
+ 	  $("#otpSection").hide();
+ 	  $("#submitTransaction").hide();
+ 	 
+	  
+	  $("#submitButton").click(function(){
+		  $("#submitButton").hide(); 
+		  $("#submitTransaction").show();
+		  sendOTP();
+	  });
+	  
+	  $("#resetOtp").click(function(){
+		  sendOTP();
+	  });
+	  
+	  loadData();
+	   /*<![CDATA[*/
+      var toAccount = /*[[${fundTransferVO.toAccount}]]*/;
+    /*]]>*/
+      var accountNumber =toAccount.split("-")[0].trim();
+	  $("#cphoto").attr("src","/customers/acphoto?accNumber="+accountNumber);
+  });
+
+
+</script>
+
+
+
+</head>
+<body>
+<header style="height: 30px;background-color: maroon;color:white;">
+ 
+</header>
+ <!-- Hello Mr. <span th:utext="${session.userSessionVO.username}" th:unless="${session == null}" style="font-weight: bold;"></span> -->
+<div class="container">
+ <br/>
+ <br/>
+<a th:href="@{/customer/pendingPayee}">
+<button type="button" class="btn btn-success">Pending payee</button>
+</a>
+
+<a th:href="@{/customer/registeredPayee}">
+<button type="button" class="btn btn-info">My registered payees</button>
+</a>
+ <a th:href="@{/customer/logout}"><button type="button" class="btn btn-warning">Logout</button></a>
+ <br/>
+ <br/>
+  <h2>Fund Transfer Review Page!~!!</h2>
+ <div style="width: 100%">
+  
+   <form th:action="@{/customer/fundTransferSubmit}" method="POST"  
+   th:object="${fundTransferVO}" name="fundTransferVOForm">
+   
+    <div>
+     <span id="errorMessage" th:utext="${error}" style="color: red;font-size: 14px;"></span>
+    <span id="errorMessage" th:utext="${successMessage}" style="color: blue;font-size: 14px;"></span>
+  
+    <br/>
+					<table class="table table-bordered" style="width: 100%;">
+						<tr>
+							<td style="width: 50%">
+								<div>
+									<label for="fromAccount">From Account:
+									
+									 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+									 Current Balance : <span id="cbalance" style="color:red;"></span>	 
+									</label> <br />
+									  <input type="hidden" name="sfromAccount" th:field="*{fromAccount}"> 
+									<select th:field="*{fromAccount}" class="form-control" disabled="disabled">
+									</select>
+								</div>
+							</td>
+							<td style="width: 50%">
+								<div>
+									<label for="toAccount">To Account:</label> <br /> 
+									   <input type="hidden" name="stoAccount" th:field="*{toAccount}"> 
+									<select th:field="*{toAccount}"  class="form-control"  style="font-weight: bold;" disabled="disabled">
+									</select>
+									<!-- <input
+										type="text" class="form-control" th:field="*{payeeNickName}"> -->
+								</div>
+
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<td>
+
+								<div>
+									<label for="amount">Amount:</label> <br /> 
+									<input type="text"
+										 class="form-control" th:field="*{amount}" readonly="readonly">
+									<span id="amountWord" style="color:blue;"></span>	 
+								</div>
+							</td>
+							<td>
+							 &nbsp;
+							  <img src="" id="cphoto" style="height: 120px;">
+							</td>
+						</tr>
+						
+
+
+						<tr>
+							<td>
+
+								<div>
+									<label for="remarks">Remarks:</label> <br /> <input type="text"
+										 class="form-control" th:field="*{remarks}" readonly="readonly">
+								</div>
+							</td>
+							<td>
+							 &nbsp;
+							  <img src="" id="cphoto" style="height: 120px;">
+							</td>
+						</tr>
+
+					</table>
+					 <div id="otpSection">
+					    <label for="remarks">OTP:</label> <br /> <input type="text"
+										 class="form-control" th:field="*{otp}">
+						<span style="color:red;font-weight: bold;" id="otpTimer"></span>		
+						 <br/>		 
+					     <button type="button" id="resetOtp" class="btn btn-danger" disabled="disabled">Resend</button>
+					 </div>
+					<hr/>
+<button type="button" id="submitButton"	 class="btn btn-primary">Submit</button>
+<button type="submit" id="submitTransaction" class="btn btn-primary">Submit Transaction</button>
+
+
+					<br/>
+ 
+   
+   
+  </form>
+  </div>
+</div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>
