@@ -92,6 +92,7 @@ public class CustomerController {
 			filteredList.addAll(customerVOs);
 		}
 		model.addAttribute("customerVOs",filteredList);
+		
 		List<RoleVO> roleVOs = customerService.getRoles();
 		model.addAttribute("roleVOs",roleVOs);
 		return "admin/dashboard";
@@ -102,6 +103,9 @@ public class CustomerController {
 		List<CustomerVO> customers = customerService.findCustomers();
 		List<CustomerVO> sortedCustomers = customerService.sortCustomersByName(customers);
 		model.addAttribute("customerVOs", sortedCustomers);
+		
+		List<RoleVO> roleVOs = customerService.getRoles();
+		model.addAttribute("roleVOs",roleVOs);
 		return "admin/dashboard";
 	}
 }

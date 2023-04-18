@@ -532,7 +532,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerVO> sortCustomersByName(List<CustomerVO> customers) {
-		Collections.sort(customers, Comparator.comparing(CustomerVO::getName));
+		Collections.sort(customers, Comparator.comparing(CustomerVO::getName,String.CASE_INSENSITIVE_ORDER));
         return customers;
 	}
 
