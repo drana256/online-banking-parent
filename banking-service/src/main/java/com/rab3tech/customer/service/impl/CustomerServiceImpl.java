@@ -531,11 +531,37 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<CustomerVO> sortCustomersByName(List<CustomerVO> customers) {
+	public List<CustomerVO> filterCustomerByRole(String filterDropdown) {
+		List<CustomerVO> filteredList = new ArrayList<CustomerVO>();
+		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
+		customerVOs = findCustomers();
+		if("CUSTOMER".equalsIgnoreCase(filterDropdown)) {
+			for(CustomerVO customerVO : customerVOs) {
+				if("Customer".equalsIgnoreCase(customerVO.getRole())) {
+					filteredList.add(customerVO);
+				}
+			}
+		} else if ("EMPLOYEE".equals(filterDropdown)) {
+			for(CustomerVO customerVO : customerVOs) {
+				if("Employee".equalsIgnoreCase(customerVO.getRole())) {
+					filteredList.add(customerVO);
+				}
+			}
+		} else {
+			filteredList.addAll(customerVOs);
+		}
+		return filteredList;
+	}
+	
+	@Override
+	public List<CustomerVO> sortCustomersByNameASC(List<CustomerVO> customers) {
 		Collections.sort(customers, Comparator.comparing(CustomerVO::getName,String.CASE_INSENSITIVE_ORDER));
         return customers;
 	}
-
 	
-
+	@Override
+	public List<CustomerVO> sortCustomersByNameDSC(List<CustomerVO> customers) {
+		Collections.sort(customers, Comparator.comparing(CustomerVO::getName,String.CASE_INSENSITIVE_ORDER).reversed());
+        return customers;
+	}
 }

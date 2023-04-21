@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -73,35 +74,21 @@ public class CustomerController {
 	
 	@GetMapping("/filter/customers")
 	public String showCustomerByFilter(@RequestParam String filterDropdown, Model model) {
-		List<CustomerVO> filteredList = new ArrayList<CustomerVO>();
-		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
-		customerVOs = customerService.findCustomers();
-		if("CUSTOMER".equalsIgnoreCase(filterDropdown)) {
-			for(CustomerVO customerVO : customerVOs) {
-				if("Customer".equalsIgnoreCase(customerVO.getRole())) {
-					filteredList.add(customerVO);
-				}
-			}
-		} else if ("EMPLOYEE".equals(filterDropdown)) {
-			for(CustomerVO customerVO : customerVOs) {
-				if("Employee".equalsIgnoreCase(customerVO.getRole())) {
-					filteredList.add(customerVO);
-				}
-			}
-		} else {
-			filteredList.addAll(customerVOs);
-		}
-		model.addAttribute("customerVOs",filteredList);
+		List<CustomerVO> filteredList = customerService.filterCustomerByRole(filterDropdown);
 		
 		List<RoleVO> roleVOs = customerService.getRoles();
 		model.addAttribute("roleVOs",roleVOs);
+		
+		model.addAttribute("customerVOs",filteredList);
+		model.addAttribute("filterDropdown",filterDropdown);
+		
 		return "admin/dashboard";
 	}
 	
-	@GetMapping("/sortBy/name")
-	public String sortByName(Model model) {
-		List<CustomerVO> customers = customerService.findCustomers();
-		List<CustomerVO> sortedCustomers = customerService.sortCustomersByName(customers);
+	@GetMapping("/sortBy/name/{filterDropdown}")
+	public String sortByName(@PathVariable ("filterDropdown") String filterDropdown, Model model) {
+		List<CustomerVO> filteredList = customerService.filterCustomerByRole(filterDropdown);
+		List<CustomerVO> sortedCustomers = customerService.sortCustomersByNameASC(filteredList);
 		model.addAttribute("customerVOs", sortedCustomers);
 		
 		List<RoleVO> roleVOs = customerService.getRoles();

@@ -11,17 +11,17 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   
   <style>
-.ffooter {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: red;
-  color: white;
-  text-align: center;
-  height: 30px;
-  background-color:#e9ffe7;
-}
+	.ffooter {
+	  position: fixed;
+	  left: 0;
+	  bottom: 0;
+	  width: 100%;
+	  background-color: red;
+	  color: white;
+	  text-align: center;
+	  height: 30px;
+	  background-color:#e9ffe7;
+	}
 </style>
 </head>
 <body>
@@ -44,6 +44,7 @@
 			<button type="button" class="btn btn-warning">Locations(s)</button>
 		</a>
 		<button type="button" class="btn btn-warning">Loan Request</button>
+		
 		<img th:src="@{/images/customer_dashboard.jpg}" alt="page" /> <span
 			th:utext="${error}" style="color: red; font-size: 18px;"></span>
 		<div style="width: 70%"></div>
@@ -68,7 +69,7 @@
 			<thead>
 				<tr>
 					<td>SNO</td>
-					<td>Name <a th:href="@{/admin/sortBy/name}">sort</a></td>
+					<td>Name <a th:href="@{/admin/sortBy/name/{filterDropdown}(filterDropdown=${filterDropdown})}" >sort</a></td>
 					<td>Email</td>
 					<td>Gender</td>
 					<td>Mobile</td>

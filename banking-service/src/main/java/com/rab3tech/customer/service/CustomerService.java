@@ -64,8 +64,10 @@ public interface CustomerService {
 
 	FundTransferVO executeTransaction(FundTransferVO fundTransferVO);
 
-	List<CustomerVO> sortCustomersByName(List<CustomerVO> customers);
+	List<CustomerVO> filterCustomerByRole(String filterDropdown);
 	
+	List<CustomerVO> sortCustomersByNameASC(List<CustomerVO> customers);
 	
+	List<CustomerVO> sortCustomersByNameDSC(List<CustomerVO> customers);
 
 }
