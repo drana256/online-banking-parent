@@ -42,7 +42,7 @@
 		var selectedValue=$("#location").val();
 		alert(selectedValue);
 		
-		fetch("http://localhost:9999/v3/locations/").then(res.json()).then(function(data)){
+		fetch("http://localhost:9999/v3/locations/").then(res.json()).then(function(data){
 			var contents='';
 			for(var x=0; x<data/length;x++){
 				conteents=contents+'<tr>';
@@ -52,7 +52,7 @@
 			}
 			$("#pktable").show();
 			$("pkdata").html(contents);
-		}
+		});
 	}
 </script>
 
